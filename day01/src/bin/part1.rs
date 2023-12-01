@@ -14,8 +14,6 @@ pub fn main() -> Result<(), Error> {
         .into_iter()
         .map(|line| {
             let digits: Vec<u32> = line.chars().filter_map(|chr| chr.to_digit(10)).collect();
-            println!("first is: {}", digits.first().unwrap_or(&0));
-            println!("last is: {}", digits.last().unwrap_or(&0));
             digits.first().unwrap_or(&0) * 10 + digits.last().unwrap_or(&0)
         })
         .sum();
