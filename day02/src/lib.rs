@@ -1,3 +1,4 @@
+use std::cmp::max;
 use std::fmt::Error;
 
 #[derive(Debug, Clone, Copy)]
@@ -41,6 +42,10 @@ impl Extraction {
         let val = input.strip_suffix(color).ok_or(Error)?;
         val.trim().parse::<usize>().map_err(|err| err.into())
     }
+
+    pub fn power(&self) -> usize {
+        self.red * self.green * self.blue
+    }
 }
 
 impl Game {
@@ -62,8 +67,8 @@ impl Game {
         Ok(Game { id, extractions })
     }
 
-    pub fn validate(game: &Self, load: Extraction) -> bool {
-        let extractions = game.extractions.clone();
+    pub fn validate(&self, load: Extraction) -> bool {
+        let extractions = self.extractions.clone();
         !extractions.into_iter().any(|extraction| {
             extraction.red > load.red
                 || extraction.green > load.green
@@ -71,7 +76,20 @@ impl Game {
         })
     }
 
-    pub fn id(game: &Self) -> usize {
-        game.id
+    pub fn minimum_load(&self) -> Extraction {
+        let extractions = self.extractions.clone();
+        extractions
+            .into_iter()
+            .fold(Extraction::new(0, 0, 0), |acc, elem| {
+                Extraction::new(
+                    max(acc.red, elem.red),
+                    max(acc.green, elem.green),
+                    max(acc.blue, elem.blue),
+                )
+            })
+    }
+
+    pub fn id(&self) -> usize {
+        self.id
     }
 }

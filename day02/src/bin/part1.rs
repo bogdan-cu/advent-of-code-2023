@@ -10,8 +10,8 @@ pub fn main() -> color_eyre::Result<()> {
     let total_of_games: usize = contents
         .lines()
         .flat_map(Game::parse_from)
-        .filter(|game| Game::validate(game, load))
-        .map(|game| day02::Game::id(&game))
+        .filter(|game| game.validate(load))
+        .map(|game| game.id())
         .sum();
 
     println!("total sum of games is {}", total_of_games);
