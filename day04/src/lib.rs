@@ -74,4 +74,12 @@ impl Card {
             Ok(base.pow(exp - 1))
         }
     }
+
+    pub fn true_value(&self) -> usize {
+        let mut numbers = self.numbers.clone();
+        let winners = self.winners.clone();
+        numbers.retain(|num| winners.contains(num));
+
+        numbers.len()
+    }
 }
