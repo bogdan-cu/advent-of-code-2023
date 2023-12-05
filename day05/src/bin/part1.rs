@@ -13,7 +13,7 @@ pub fn main() -> color_eyre::Result<()> {
         .flat_map(|s| s.parse::<usize>())
         .collect();
     //this is the array of objects that contains the iterative maps from seed to location
-    let mut obj = seeds.clone();
+    let mut obj = seeds;
 
     while let Some(conversion_section) = sections.next() {
         let maps = Transformation::parse(conversion_section)?;
