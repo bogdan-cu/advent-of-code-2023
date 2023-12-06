@@ -1,5 +1,5 @@
 use color_eyre::eyre::eyre;
-use day06::{count_winning_strategies, read_input};
+use day06::{count_winning_strategies_efficient, read_input};
 
 pub fn main() -> color_eyre::Result<()> {
     let contents = read_input("./src/input.txt")?;
@@ -21,7 +21,7 @@ pub fn main() -> color_eyre::Result<()> {
         .parse::<usize>()
         .map_err(|_| eyre!("could not parse distance"))?;
 
-    let result = count_winning_strategies(timer, distance);
-    println!("result is {}", result);
+    let result_efficient = count_winning_strategies_efficient(timer, distance);
+    println!("result is {}", result_efficient);
     Ok(())
 }

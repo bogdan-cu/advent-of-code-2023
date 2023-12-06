@@ -13,3 +13,14 @@ pub fn count_winning_strategies(timer: usize, distance: usize) -> usize {
         .collect();
     result.len()
 }
+
+pub fn count_winning_strategies_efficient(timer: usize, distance: usize) -> usize {
+    //as seen in the brute force solution above, solutions to the inequality are located in the interval determined
+    //by the two solutions of the quadratic equation
+    let t = timer as f64;
+    let d = distance as f64;
+    let sol1 = (t - f64::sqrt(f64::powi(t, 2) - 4.00 * d)) / 2.00;
+    let sol2 = (t + f64::sqrt(f64::powi(t, 2) - 4.00 * d)) / 2.00;
+
+    sol2.floor().min(t) as usize - sol1.ceil().max(0.00) as usize + 1
+}
