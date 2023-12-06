@@ -23,7 +23,7 @@ pub fn main() -> color_eyre::Result<()> {
 
     let races = timers.iter().zip(distances.iter());
     let total: usize = races
-        .map(|(timer, distance)| count_winning_strategies(timer, distance))
+        .map(|(timer, distance)| count_winning_strategies(*timer, *distance))
         .product();
     println!("result is {}", total);
 
