@@ -35,6 +35,25 @@ impl Hand {
         }
     }
 
+    fn parse_card_part2(card: char) -> Result<usize> {
+        match card {
+            '2' => Ok(2),
+            '3' => Ok(3),
+            '4' => Ok(4),
+            '5' => Ok(5),
+            '6' => Ok(6),
+            '7' => Ok(7),
+            '8' => Ok(8),
+            '9' => Ok(9),
+            'T' => Ok(10),
+            'J' => Ok(1),
+            'Q' => Ok(11),
+            'K' => Ok(12),
+            'A' => Ok(13),
+            x => Err(eyre!("Invalid card input found: {}", x)),
+        }
+    }
+
     fn calculate_value(frequencies: &Vec<usize>) -> Result<usize> {
         match frequencies.len() {
             5 => Ok(1),
@@ -69,6 +88,22 @@ impl Hand {
         }
     }
 
+    fn calculate_value_part2(card_frequencies: &HashMap<usize, usize>) -> Result<usize> {
+        let mut card_frequencies = card_frequencies.clone();
+        if let Some((joker, joker_freq)) = card_frequencies.remove_entry(&1) {
+            if let Some((card, _)) = card_frequencies
+                .iter()
+                .max_by(|(_, fst_freq), (_, lst_freq)| (*fst_freq).cmp(*lst_freq))
+            {
+                *card_frequencies.entry(*card).or_default() += joker_freq;
+            } else {
+                *card_frequencies.entry(joker).or_default() += joker_freq;
+            }
+        };
+        let frequencies: Vec<usize> = card_frequencies.values().copied().collect();
+        Self::calculate_value(&frequencies)
+    }
+
     pub fn new(cards: &str, bid: usize) -> Result<Self> {
         let cards: Result<Vec<usize>> = cards.chars().map(Self::parse_card).collect();
         let cards = cards?;
@@ -79,6 +114,23 @@ impl Hand {
         }
         let frequencies: Vec<usize> = card_frequencies.values().copied().collect();
         let value = Self::calculate_value(&frequencies)?;
+
+        Ok(Self {
+            contents: cards,
+            hand_type: value,
+            bid,
+        })
+    }
+
+    pub fn new_part2(cards: &str, bid: usize) -> Result<Self> {
+        let cards: Result<Vec<usize>> = cards.chars().map(Self::parse_card_part2).collect();
+        let cards = cards?;
+
+        let mut card_frequencies: HashMap<usize, usize> = HashMap::new();
+        for card in cards.iter() {
+            *card_frequencies.entry(*card).or_default() += 1;
+        }
+        let value = Self::calculate_value_part2(&card_frequencies)?;
 
         Ok(Self {
             contents: cards,
