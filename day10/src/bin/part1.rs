@@ -13,8 +13,8 @@ pub fn main() -> Result<()> {
             v
         })
         .collect();
-    let y = lines.len();
-    let x = lines
+    let x = lines.len();
+    let y = lines
         .iter()
         .map(|line| line.len())
         .max()
@@ -53,7 +53,7 @@ pub fn main() -> Result<()> {
             *distance_arr.get_mut(idx).unwrap() = distance;
 
             for direction in directions.iter() {
-                let neighbour_idx = match direction.from_pos(idx) {
+                let neighbour_idx = match direction.from_pos(idx, 1) {
                     Some(val) => val,
                     None => continue,
                 };
@@ -79,7 +79,7 @@ pub fn main() -> Result<()> {
         let idx = (idx / y, idx % y);
         let connected_neighbours: Vec<&isize> = directions
             .iter()
-            .flat_map(|direction| direction.from_pos(idx))
+            .flat_map(|direction| direction.from_pos(idx, 1))
             .flat_map(|position| distance_arr.get(position))
             .filter(|elem| **elem == *distance - 1)
             .collect();
@@ -87,6 +87,8 @@ pub fn main() -> Result<()> {
             farthest_element = *distance;
         }
     }
+    let map_arr = distance_arr.map(|elem| if *elem >= 0 { 1 } else { 0 });
+    println!("{:?}", &map_arr);
     println!("result is {}", farthest_element);
 
     Ok(())

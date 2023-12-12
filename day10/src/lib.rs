@@ -117,22 +117,22 @@ pub enum Direction {
 }
 
 impl Direction {
-    pub fn from_pos(&self, origin: (usize, usize)) -> Option<(usize, usize)> {
+    pub fn from_pos(&self, origin: (usize, usize), distance: usize) -> Option<(usize, usize)> {
         match self {
-            Self::East => Some((origin.0, origin.1 + 1)),
+            Self::East => Some((origin.0, origin.1 + distance)),
             Self::North => {
                 if origin.0 == 0 {
                     return None;
                 }
-                Some((origin.0 - 1, origin.1))
+                Some((origin.0 - distance, origin.1))
             }
             Self::West => {
                 if origin.1 == 0 {
                     return None;
                 }
-                Some((origin.0, origin.1 - 1))
+                Some((origin.0, origin.1 - distance))
             }
-            Self::South => Some((origin.0 + 1, origin.1)),
+            Self::South => Some((origin.0 + distance, origin.1)),
         }
     }
 }
