@@ -1,5 +1,5 @@
 use color_eyre::eyre::{eyre, Ok, Result};
-use day11::{get_distance_pt2, read_input};
+use day11::{get_distance, read_input};
 
 pub fn main() -> Result<()> {
     let contents = read_input("./src/input.txt")?;
@@ -57,9 +57,7 @@ pub fn main() -> Result<()> {
         let lst = galaxies.get(i + 1..galaxy_counter).unwrap();
         total += lst
             .iter()
-            .map(|galaxy| {
-                get_distance_pt2(fst, galaxy, &line_expansions, &column_expansions, 1000000)
-            })
+            .map(|galaxy| get_distance(fst, galaxy, &line_expansions, &column_expansions, 1000000))
             .sum::<usize>();
     }
 

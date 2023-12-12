@@ -9,11 +9,7 @@ pub fn read_input(path: &str) -> Result<String> {
     Ok(contents)
 }
 
-pub fn get_distance(fst: &(usize, usize), lst: &(usize, usize)) -> isize {
-    (fst.0 as isize - lst.0 as isize).abs() + (fst.1 as isize - lst.1 as isize).abs()
-}
-
-pub fn get_distance_pt2(
+pub fn get_distance(
     fst: &(usize, usize),
     lst: &(usize, usize),
     line_expansions: &[usize],

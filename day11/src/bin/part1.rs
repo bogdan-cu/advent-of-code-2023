@@ -26,38 +26,21 @@ pub fn main() -> Result<()> {
         map.push(row?);
     }
 
-    let mut line_expansions = Vec::<usize>::new();
-    let mut expansions = 0_usize;
-    for (idx, line) in map.iter().enumerate() {
-        if line.iter().sum::<usize>() == 0 {
-            expansions += 1;
-            line_expansions.push(idx + expansions);
-        };
-    }
-    let expansion_line = vec![0; y];
-    for expansion_idx in line_expansions {
-        map.insert(expansion_idx, expansion_line.clone());
-    }
-
-    let mut column_expansions = Vec::<usize>::new();
-    let mut expansions = 0_usize;
-    for idx in 0..y {
-        if map.iter().map(|row| *row.get(idx).unwrap()).sum::<usize>() == 0 {
-            expansions += 1;
-            column_expansions.push(idx + expansions);
-        }
-    }
-    let map_final: Vec<Vec<usize>> = map
-        .into_iter()
-        .map(|mut row| {
-            for expansion_idx in column_expansions.iter() {
-                row.insert(*expansion_idx, 0);
-            }
-            row
-        })
+    let line_expansions: Vec<usize> = map
+        .iter()
+        .enumerate()
+        .filter(|(_, row)| row.iter().all(|elem| *elem == 0))
+        .map(|(idx, _)| idx)
         .collect();
 
-    let galaxies: Vec<(usize, usize)> = map_final
+    let mut column_expansions = Vec::<usize>::new();
+    for idx in 0..y {
+        if map.iter().map(|row| *row.get(idx).unwrap()).sum::<usize>() == 0 {
+            column_expansions.push(idx);
+        }
+    }
+
+    let galaxies: Vec<(usize, usize)> = map
         .iter()
         .enumerate()
         .flat_map(|(idx_x, row)| {
@@ -67,14 +50,15 @@ pub fn main() -> Result<()> {
                 .map(move |(idx_y, _)| (idx_x, idx_y))
         })
         .collect();
+
     let mut total = 0;
     for i in 0..galaxy_counter - 1 {
         let fst = galaxies.get(i).unwrap();
         let lst = galaxies.get(i + 1..galaxy_counter).unwrap();
         total += lst
             .iter()
-            .map(|galaxy| get_distance(fst, galaxy))
-            .sum::<isize>();
+            .map(|galaxy| get_distance(fst, galaxy, &line_expansions, &column_expansions, 1))
+            .sum::<usize>();
     }
 
     println!("{}", total);
