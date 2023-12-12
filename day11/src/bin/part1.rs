@@ -57,7 +57,7 @@ pub fn main() -> Result<()> {
         let lst = galaxies.get(i + 1..galaxy_counter).unwrap();
         total += lst
             .iter()
-            .map(|galaxy| get_distance(fst, galaxy, &line_expansions, &column_expansions, 1))
+            .map(|galaxy| get_distance(fst, galaxy, &line_expansions, &column_expansions, 2))
             .sum::<usize>();
     }
 
