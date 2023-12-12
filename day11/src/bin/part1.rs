@@ -4,7 +4,7 @@ use day11::{get_distance, read_input};
 pub fn main() -> Result<()> {
     let contents = read_input("./src/input.txt")?;
     let mut map: Vec<Vec<usize>> = Vec::new();
-    let x = contents.lines().count();
+    let _x = contents.lines().count();
     let y = contents
         .lines()
         .map(|line| line.len())
