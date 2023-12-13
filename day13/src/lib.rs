@@ -36,36 +36,6 @@ pub fn to_u32(slice: &[u8]) -> u32 {
 }
 
 pub fn find_reflection(v: &[u32]) -> Option<usize> {
-    for i in 1..v.len() {
-        let mut j = 0;
-        while j < i {
-            let s = v.get(j..=i).unwrap();
-            if s.iter().fold(0, |acc, elem| acc ^ *elem) == 0 {
-                return Some((i - j + 1) / 2 + j);
-            };
-            j += 1;
-        }
-    }
-    None
-}
-
-pub fn find_reflection_alt(v: &[u32]) -> Option<usize> {
-    for i in 1..v.len() {
-        let s = v.get(..=i).unwrap();
-        if s.iter().fold(0, |acc, elem| acc ^ *elem) == 0 {
-            return Some(s.len() / 2);
-        };
-    }
-    for i in (0..v.len() - 1).rev() {
-        let s = v.get(i..).unwrap();
-        if s.iter().fold(0, |acc, elem| acc ^ *elem) == 0 {
-            return Some(i + s.len() / 2);
-        };
-    }
-    None
-}
-
-pub fn find_reflection_alt2(v: &[u32]) -> Option<usize> {
     for i in 0..v.len() / 2 {
         let s = v.get(..=i).unwrap();
         let r = v.get(i + 1..).unwrap();
@@ -81,4 +51,26 @@ pub fn find_reflection_alt2(v: &[u32]) -> Option<usize> {
         }
     }
     None
+}
+
+pub fn find_reflection_alt(v: &[u32]) -> Option<Vec<usize>> {
+    let mut reflections = Vec::<usize>::new();
+    for i in 0..v.len() / 2 {
+        let s = v.get(..=i).unwrap();
+        let r = v.get(i + 1..).unwrap();
+        if s.iter().rev().zip(r.iter()).all(|(e1, e2)| *e1 == *e2) {
+            reflections.push(s.len());
+        }
+    }
+    for i in v.len() / 2 + 1..v.len() {
+        let s = v.get(i..).unwrap();
+        let r = v.get(..i).unwrap();
+        if s.iter().zip(r.iter().rev()).all(|(e1, e2)| *e1 == *e2) {
+            reflections.push(r.len());
+        }
+    }
+    if reflections.is_empty() {
+        return None;
+    }
+    Some(reflections)
 }

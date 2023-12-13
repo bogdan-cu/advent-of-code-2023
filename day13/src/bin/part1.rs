@@ -1,5 +1,5 @@
 use color_eyre::Result;
-use day13::{find_reflection_alt2, read_input, to_array, to_u32};
+use day13::{find_reflection, read_input, to_array, to_u32};
 use ndarray::Array2;
 
 pub fn main() -> Result<()> {
@@ -31,7 +31,7 @@ pub fn main() -> Result<()> {
             .into_iter()
             .map(|row| to_u32(&row.to_vec()))
             .collect::<Vec<u32>>();
-        total += find_reflection_alt2(&o).unwrap_or(0) * 100;
+        total += find_reflection(&o).unwrap_or(0) * 100;
 
         //for vertical reflection
         let t = transposed
@@ -39,7 +39,7 @@ pub fn main() -> Result<()> {
             .into_iter()
             .map(|row| to_u32(&row.to_vec()))
             .collect::<Vec<u32>>();
-        total += find_reflection_alt2(&t).unwrap_or(0);
+        total += find_reflection(&t).unwrap_or(0);
     }
 
     println!("{}", total);
