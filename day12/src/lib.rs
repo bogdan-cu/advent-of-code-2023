@@ -29,12 +29,32 @@ pub fn parse_input_line(s: &str) -> Result<(&str, Vec<usize>)> {
 
 pub fn generate_constraints(s: &str) -> (usize, Vec<(usize, char)>) {
     let length = s.len();
-    let r: Vec<(usize, char)> = s
+    let constraints: Vec<(usize, char)> = s
         .chars()
         .enumerate()
         .filter(|(_, chr)| *chr == '.' || *chr == '#')
         .collect();
-    (length, r)
+    (length, constraints)
+}
+
+pub fn generate_constraints_pt2(s: &str) -> (usize, Vec<(usize, char)>) {
+    let length = s.len();
+    let initial_constraints: Vec<(usize, char)> = s
+        .chars()
+        .enumerate()
+        .filter(|(_, chr)| *chr == '.' || *chr == '#')
+        .collect();
+
+    let mut constraints = initial_constraints.clone();
+    for i in 1..5 {
+        constraints.append(
+            &mut initial_constraints
+                .iter()
+                .map(|(idx, chr)| (*idx + length + i, *chr))
+                .collect::<Vec<(usize, char)>>(),
+        );
+    }
+    (length * 5 + 4, constraints)
 }
 
 pub fn generate_working_spring_sections(
