@@ -23,7 +23,7 @@ pub fn to_array(s: &str) -> Result<Array2<u8>> {
     for (idx_x, row) in lines.iter().enumerate() {
         for (idx_y, chr) in row.chars().enumerate() {
             if chr == '#' {
-                *x.get_mut((idx_x, idx_y)).unwrap() = 1;
+                *x.get_mut((idx_x, idx_y)).ok_or(eyre!("parsing failed"))? = 1;
             }
         }
     }
@@ -37,15 +37,15 @@ pub fn to_u32(slice: &[u8]) -> u32 {
 
 pub fn find_reflection(v: &[u32]) -> Option<usize> {
     for i in 0..v.len() / 2 {
-        let s = v.get(..=i).unwrap();
-        let r = v.get(i + 1..).unwrap();
+        let s = v.get(..=i)?;
+        let r = v.get(i + 1..)?;
         if s.iter().rev().zip(r.iter()).all(|(e1, e2)| *e1 == *e2) {
             return Some(s.len());
         }
     }
     for i in v.len() / 2 + 1..v.len() {
-        let s = v.get(i..).unwrap();
-        let r = v.get(..i).unwrap();
+        let s = v.get(i..)?;
+        let r = v.get(..i)?;
         if s.iter().zip(r.iter().rev()).all(|(e1, e2)| *e1 == *e2) {
             return Some(r.len());
         }
@@ -56,15 +56,15 @@ pub fn find_reflection(v: &[u32]) -> Option<usize> {
 pub fn find_reflection_alt(v: &[u32]) -> Option<Vec<usize>> {
     let mut reflections = Vec::<usize>::new();
     for i in 0..v.len() / 2 {
-        let s = v.get(..=i).unwrap();
-        let r = v.get(i + 1..).unwrap();
+        let s = v.get(..=i)?;
+        let r = v.get(i + 1..)?;
         if s.iter().rev().zip(r.iter()).all(|(e1, e2)| *e1 == *e2) {
             reflections.push(s.len());
         }
     }
     for i in v.len() / 2 + 1..v.len() {
-        let s = v.get(i..).unwrap();
-        let r = v.get(..i).unwrap();
+        let s = v.get(i..)?;
+        let r = v.get(..i)?;
         if s.iter().zip(r.iter().rev()).all(|(e1, e2)| *e1 == *e2) {
             reflections.push(r.len());
         }
